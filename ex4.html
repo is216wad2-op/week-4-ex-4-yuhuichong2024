@@ -1,43 +1,59 @@
+<!DOCTYPE html>
 <html>
-   <head>
-      <title>Event Handling</title>
-   </head>
-   <body>
-     
-      <h1>Shopping List</h1>
-      <p>Get it done today</p>
-      <input id="userinput"  type="text" placeholder="enter items">
-      <button id="enter" onclick="addListAfterClick()">Enter</button>
-      <ul>
-         <li>Notebook</li>
-         <li>Jello</li>
-         <li>Spinach</li>
-         <li>Rice</li>
-         <li>Birthday Cake</li>
-         <li>Candles</li>
-      </ul>
-      
-      <script>
-      
-         function addListAfterClick() {
-            var ul = document.getElementsByTagName("ul")[0];
-            var li = document.createElement("li");
-            var input = document.getElementById("userinput");
-            // add new item only if the user has entered something
-            if (input.value.length > 0) {
-               var textNode = document.createTextNode(input.value);
-               li.appendChild(textNode);
-               ul.appendChild(li);
-               input.value = "";
-            }
-            // following alternative code also works but is unsafe
-            // try entering the input <h2>abcd</h2>
-            // var input = document.getElementById("userinput");
-            // var ul = document.getElementsByTagName("ul")[0];
-            // ul.innerHTML += input.value
-         }
+<head>
+   <title>Event Handling</title>
+</head>
+<body>
+   <h1>Shopping List</h1>
+   <p>Get it done today</p>
 
-      </script>
- 
-   </body>
+   <input id="userinput" 
+          onkeypress="addListAfterKeyPress(event)" 
+          type="text" 
+          placeholder="enter items">
+
+   <button id="enter" onclick="addListAfterClick()">Enter</button>
+
+   <ul id="shopping-list">
+      <li>Notebook <button onclick="remove(this.parentNode)">delete</button></li>
+      <li>Jello <button onclick="remove(this.parentNode)">delete</button></li>
+   </ul>
+
+   <script>
+      function createNewItem(input) {
+         var ul = document.getElementById("shopping-list");
+         var li = document.createElement("li");
+         li.textContent = input.value + " ";
+         // add delete button
+         var btn = document.createElement("button");
+         btn.textContent = "delete";
+         btn.onclick = function () { remove(li); };
+         li.appendChild(btn);
+         ul.appendChild(li);
+      }
+
+      function addListAfterClick() {
+         var input = document.getElementById("userinput");
+         if (input.value.length > 0) {
+            createNewItem(input);
+            input.value = "";
+         }
+      }
+
+      function addListAfterKeyPress(event) {
+         console.log(event);
+         console.log();
+         var input = document.getElementById("userinput");
+         if (input.value.length > 0 && event.keyCode === "13") {
+         // if (input.value.length > 0 && event.key === "Enter") {
+            createNewItem(input);
+            input.value = "";
+         }
+      }
+
+      function remove(item) {
+         item.remove();
+      }
+   </script>
+</body>
 </html>
